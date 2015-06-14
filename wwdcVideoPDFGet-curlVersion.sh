@@ -31,6 +31,7 @@ DEFAULT_YEAR="2015"
 DEFAULT_EVENT="wwdc"
 SELECTIVE_SESSION_MODE=false
 LIST_MODE=false
+PDF_ONLY=false;
 VERBOSE=false
 LOGIN=false
 ITUNES_LOGIN=""
@@ -706,14 +707,17 @@ doGetWWDC2015 () {
                 fi
 
                 # downloading video files
-                dest_path="${WWDC_DIRNAME}/${FORMAT}-VIDEOs/${line} - ${title_array[$line]}-${FORMAT}.mov"
-                if [ -f "${dest_path}" ]
+                if [ ${PDF_ONLY} == false ];
                 then
-                    echo "${dest_path} already downloaded (nothing to do!)"
-                else
-                    echo "downloading ${FORMAT} Video for session ${line}: ${title_array[$line]}" 
-                    curl "${videoURL}" > "${dest_path}.download"
-                    mv "${dest_path}.download" "${dest_path}"
+                  dest_path="${WWDC_DIRNAME}/${FORMAT}-VIDEOs/${line} - ${title_array[$line]}-${FORMAT}.mov"
+                  if [ -f "${dest_path}" ]
+                  then
+                      echo "${dest_path} already downloaded (nothing to do!)"
+                  else
+                      echo "downloading ${FORMAT} Video for session ${line}: ${title_array[$line]}" 
+                      curl "${videoURL}" > "${dest_path}.download"
+                      mv "${dest_path}.download" "${dest_path}"
+                  fi
                 fi
 
                 # downloading sample codes files
@@ -749,14 +753,17 @@ doGetWWDC2015 () {
             fi
 
             # downloading videos
-            dest_path="${WWDC_DIRNAME}/${FORMAT}-VIDEOs/${line} - ${title_array[$line]}-${FORMAT}.mov"
-            if [ -f "${dest_path}" ]
+            if [ ${PDF_ONLY} == false ];
             then
-                echo "${dest_path} already downloaded (nothing to do!)"
-            else
-                echo "downloading ${FORMAT} Video for session ${line}: ${title_array[$line]}" 
-                curl -L "${videoURL}" > "${dest_path}.download"
-                mv "${dest_path}.download" "${dest_path}"
+              dest_path="${WWDC_DIRNAME}/${FORMAT}-VIDEOs/${line} - ${title_array[$line]}-${FORMAT}.mov"
+              if [ -f "${dest_path}" ]
+              then
+                  echo "${dest_path} already downloaded (nothing to do!)"
+              else
+                  echo "downloading ${FORMAT} Video for session ${line}: ${title_array[$line]}" 
+                  curl -L "${videoURL}" > "${dest_path}.download"
+                  mv "${dest_path}.download" "${dest_path}"
+              fi
             fi
 
             # downloading sample codes files
@@ -809,7 +816,7 @@ FORMAT=${DEFAULT_FORMAT}
 YEAR=${DEFAULT_YEAR}
 EVENT=${DEFAULT_EVENT}
 
-while getopts ":hl:y:f:s:vLo:e:" opt; do
+while getopts ":hl:y:f:s:pvLo:e:" opt; do
   case $opt in
     h)
 	  	echo "WWDC Videos and PDFs downloader (version ${VERSION})" >&2
@@ -826,7 +833,8 @@ while getopts ":hl:y:f:s:vLo:e:" opt; do
       	echo "		default value is \"wwdc\"" >&2
       	echo "	-f <format>: select video format type (SD or HD). Default video format is SD" >&2
       	echo "	-s <comma separated session numbers>: select which sessions you want to download (try -L option for list of avialable videos)" >&2
-      	echo "	-v : verbose mode" >&2
+        echo "  -p : PDF and sample code only mode" >&2
+        echo "  -v : verbose mode" >&2
       	echo "	-o <output path>: path where to download content (default is /Users/${USER}/Documents/WWDC-<selected year|default=2015>)" >&2
       	echo "	-l [Not needed anymore] <iTunes login>: Give your Developer portal login (so far you don't need to login anymore. If this does change, please use -l option)." >&2
       	echo "	-L : List available video sessions" >&2
@@ -849,7 +857,9 @@ while getopts ":hl:y:f:s:vLo:e:" opt; do
       	echo "  		`basename $0` -s 201,400 -f HD"  >&2
       	echo "	- Download all HD videos for wwdc 2015 in /Users/${USER}/Desktop/WWDC-2014 using verbose mode:"  >&2
       	echo "  		`basename $0` -v -f HD -o /Users/${USER}/Desktop/WWDC-2014"  >&2
-      	echo ""
+      	echo "  - Download all PDF and sample codes (no videos) for wwdc 2015:"  >&2
+        echo "      `basename $0` -p"  >&2
+        echo ""
       	exit 0;
       	;;
     l)
@@ -881,10 +891,14 @@ while getopts ":hl:y:f:s:vLo:e:" opt; do
 	  		echo "Session number does not look good!"
 	  	fi
       	;;
+    p)
+        echo "PDF mode only"
+        PDF_ONLY=true
+        ;;
     v)
-      	echo "Verbose mode on"
-      	VERBOSE=true
-      	;;
+        echo "Verbose mode on"
+        VERBOSE=true
+        ;;
     L)
       	LIST_MODE=true
       	;;
