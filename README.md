@@ -1,6 +1,15 @@
 WWDC 2015, 2014, 2013 & Tech-talks 2013 <br/>Videos and sessions PDFs downloader
 ================
 
+This is a fork off [ohoachuck's wwdc-downloader](https://github.com/ohoachuck/wwdc-downloader), with the following enhancement:
+
+- Provide a `-p` option to download only the PDFs and sample codes
+
+WHY have `-p` mode? Because it is faster to scan the PDF and decide if the session video is worth watching. 
+
+NOTE: The `-p` mode works for only WWDC 2015, and it is a quick hack so it doesn't correct the console outputs. 
+
+---
 
 This script is a bash script that should **work out of the box** without any needs of extra software or development package.
 ** **

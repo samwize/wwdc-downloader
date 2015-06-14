@@ -892,7 +892,7 @@ while getopts ":hl:y:f:s:pvLo:e:" opt; do
 	  	fi
       	;;
     p)
-        echo "PDF mode only"
+        echo "PDF only mode"
         PDF_ONLY=true
         ;;
     v)
